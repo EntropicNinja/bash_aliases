@@ -1,0 +1,171 @@
+###########
+##   NOTES   ##
+###########
+## Remember an Aliases can reference another Alias
+## In bash, 'do' is a reserved word. It's looking for a do ... done block. Just name your alias something else.
+## Template [alias emacs='echo "emacs sucks " && sleep 2 && vim'] (I use geany so no flame wars....;-)
+
+### ALIASES
+
+## Pacman
+
+	alias p='pacman'
+	alias lstorphan='sudo p -Qdt'
+	alias rmvorphan='sudo p -Rsn $(pacman -Qdtq)'
+	alias notorphan='p -D --asexplicit'
+	alias paccache='sudo paccache -r $(paccache -ruk)'
+		
+## Yaourt
+
+   alias y='yaourt'
+   alias up='yaourt -Syyuua'
+    alias sch='y -Ss'
+    alias inst='yaourt -S'
+
+## Pacaur
+
+    alias pup='pacaur -Syyua'
+    alias pups='pacaur -Ss'
+    alias pupi='pacaur -S'
+
+## Systemd
+
+    alias sys='sudo systemctl'
+    alias stat='sudo systemctl status'    
+    alias en=' sudo systemctl enable'
+    alias re='sudo systemctl restart'
+    alias gdm='sudo systemctl restart gdm.service'
+
+## System
+
+	alias sudo='sudo'  # This is so I can run aliases as root. Instigaed on my Arch boxen
+	alias shtd='sudo shutdown -hP now'
+	alias 30m='sudo shutdown -hP 1800'
+	alias 1hr='sudo shutdown -hP 3600'
+    alias process='ps aux | grep '
+    alias doch='sudo $(fc =ln =1)'
+	alias meminfo='free -m -l -t'
+	alias myip='echo My IP is && curl ip.appspot.com && echo' 
+		
+##  Safety aliases for rm, mv, cp
+
+	alias rm='rm -iv'
+	alias mv='mv -iv'
+	alias cp='cp -iv' 	
+	
+## Other 
+
+    alias ..='cd ..'
+	alias ...='cd ../..'
+	alias ....='cd ../../..' 
+	alias gohome='cd ~; clear'
+    alias h4='~/h4u.sh'
+    alias vpn='sudo openvpn /etc/openvpn/frootvpn.ovpn'
+	md5check() { md5sum "$1" | grep "$2";}
+	alias makescript="fc -rnl | head -1 >"  # Make a script out of the last command you ran: makescript [script.sh]
+	alias ps? = "ps aux | grep"
+	alias killthefox='kill `pidof firefox-bin`' # or just use pkill...
+	
+## Filesystem
+
+	alises ducks='du -cksh *|sort -hr|head -11'  # List top ten largest files/directories in current directory
+	
+ ## Sudo Funny
+ 
+	alias 'make_me_a_sandwich'='echo "What? Make it yourself"'
+	alias 'sudo_make_me_a_sandwich'='echo "ok"'
+	
+## Installed Tools Made Easier
+
+	alias inxi='inxi -c 26'
+	alias show='pkgcacheclean -nv'
+	alias clean='pkgcacheclean -v'
+	alias showall='pkgcacheclean -nkv'
+	alias cleanall='pkgcacheclean -kv'
+
+### FUNCTIONS 
+
+## Filesystem 
+
+# Make a directory and jump directly into it.	
+mcd() {
+  mkdir -p "$1" && cd "$1";
+}
+
+## Perform 'ls' after 'cd' if successful.
+cdls() {  
+  builtin cd "$*"  
+  RESULT=$?  
+  if [ "$RESULT" -eq 0 ]; then  
+    ls  
+  fi  
+}  
+
+> or  use 
+>
+cdl ()   
+{  
+   cd $1  
+   ls  
+}
+
+## Convert a Manpage to PDF & save to /tmp
+man2pdf() {  
+    if [[ -z $1 ]]; then  
+    	echo "USAGE: man2pdf [manpage]"  
+    else  
+    	if [[ `find /usr/share/man -name $1\* | wc -l` -gt 0 ]]; then  
+		out=/tmp/$1.pdf  
+		if [[ ! -e $out ]]; then  
+			man -t $1 | ps2pdf - > $out  
+		fi  
+		if [[ -e $out ]]; then  
+			/usr/bin/evince $out  
+		fi  
+	else  
+		echo "ERROR: manpage \"$1\" not found."  
+	fi  
+    fi  
+}  
+
+## Extracting
+
+# ls archives (inspired by `extract`)
+    lsz() {  
+    if [ $# -ne 1 ]  
+    then  
+        echo "lsz filename.[tar,tgz,gz,zip,etc]"  
+        return 1  
+    fi  
+    if [ -f $1 ] ; then  
+        case $1 in  
+            *.tar.bz2|*.tar.gz|*.tar|*.tbz2|*.tgz) tar tvf $1;;  
+            *.zip)  unzip -l $1;;  
+            *)      echo "'$1' unrecognized." ;;  
+        esac  
+    else  
+        echo "'$1' is not a valid file"  
+    fi  
+}  
+
+extract() {  
+    if [ -f $1 ] ; then  
+      case $1 in  
+        *.tar.bz2)   tar xjf $1     ;;  
+        *.tar.gz)    tar xzf $1     ;;  
+        *.bz2)       bunzip2 $1     ;;  
+        *.rar)       unrar e $1     ;;  
+        *.gz)        gunzip $1      ;;  
+        *.tar)       tar xf $1      ;;  
+        *.tbz2)      tar xjf $1     ;;  
+        *.tgz)       tar xzf $1     ;;  
+        *.zip)       unzip $1       ;;  
+        *.Z)         uncompress $1  ;;  
+        *.7z)        7z x $1        ;;  
+        *)     echo "'$1' cannot be extracted via extract()" ;;  
+         esac  
+     else  
+         echo "'$1' is not a valid file"  
+     fi  
+} 
+
