@@ -1,9 +1,8 @@
-###########
-##   NOTES   ##
+# NOTES 
 ###########
 ## Remember an Aliases can reference another Alias
 ## In bash, 'do' is a reserved word. It's looking for a do ... done block. Just name your alias something else.
-## Template [alias emacs='echo "emacs sucks " && sleep 2 && vim'] (I use geany so no flame wars....;-)
+## Template [alias emacs='echo "emacs sucks " && sleep 2 && vim'] (I use nano so no flame wars....;-)
 
 ### ALIASES
 
